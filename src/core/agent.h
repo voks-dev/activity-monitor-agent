@@ -20,10 +20,11 @@ class Agent {
         transport_(transport),
         packetBuilder_(packetBuilder) {}
   ~Agent() {
+    // stop() is noexcept - no exception can escape the destructor.
     stop();
   }
 
-  void stop();
+  void stop() noexcept;
   void start();
 
  private:
