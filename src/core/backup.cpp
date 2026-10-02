@@ -4,8 +4,10 @@
 
 #include <nlohmann/json.hpp>
 
+#include <exception>
 #include <filesystem>
 #include <fstream>
+#include <iostream>
 #include <optional>
 
 bool Backup::saveBackup(const std::deque<Metrics>& metrics) {
@@ -38,12 +40,22 @@ std::optional<std::deque<Metrics>> Backup::loadBackup() {
     return std::nullopt;
   }
 
+  std::size_t skippedMetric{0};
   std::deque<Metrics> result{};
   for (const auto& item : arr) {
     if (!item.is_object()) {
+      ++skippedMetric;
       continue;
     }
-    result.push_back(item.get<Metrics>());
+    try {
+      result.push_back(item.get<Metrics>());
+    } catch (const nlohmann::json::exception&) {
+      ++skippedMetric;
+    }
+  }
+  if (skippedMetric > 0) {
+    std::cerr << "[backup] loaded: " << result.size()
+              << ", skipped: " << skippedMetric << '\n';
   }
 
   return result;
