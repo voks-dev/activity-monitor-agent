@@ -26,7 +26,15 @@ FetchContent_Declare(
     GIT_SHALLOW    TRUE
 )
 
-FetchContent_MakeAvailable(nlohmann_json cpp_httplib)
+FetchContent_Declare(
+    googletest
+    GIT_REPOSITORY https://github.com/google/googletest.git
+    GIT_TAG        v1.14.0
+    GIT_SHALLOW    TRUE
+)
+set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+
+FetchContent_MakeAvailable(nlohmann_json cpp_httplib googletest)
 
 add_executable(activity-monitor-agent
     src/main.cpp
@@ -59,5 +67,10 @@ if(WIN32)
     )
 endif()
 
+
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 include(ClangFormat)
+
+
+enable_testing()
+add_subdirectory(tests)
