@@ -6,7 +6,7 @@
 
 class LinuxMetricsCollector : public MetricsCollector {
  public:
-  Metrics collect() const override { return { {},{},{}, true }; };
+  Metrics collect() const override;
 };
 
 #endif
