@@ -60,10 +60,16 @@ if(WIN32)
         user32
     )
 elseif(UNIX)
-     target_sources(activity-monitor-agent PRIVATE
+    target_sources(activity-monitor-agent PRIVATE
         src/platform/linux/linux_metrics_collector.cpp
         src/platform/linux/linux_stop_signal.cpp
         src/platform/linux/linux_system_info.cpp
+    )
+    find_package(X11 REQUIRED)
+    target_include_directories(activity-monitor-agent PRIVATE ${X11_INCLUDE_DIR})
+    target_link_libraries(activity-monitor-agent PRIVATE
+        ${X11_LIBRARIES}
+        ${X11_Xss_LIB}
     )
 endif()
 
