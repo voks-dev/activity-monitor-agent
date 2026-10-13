@@ -8,7 +8,7 @@
 #include "core/packet_builder.h"
 #include "core/thread_safe_queue.h"
 #include "transport/http/http_transport.h"
-#include "core/platform.h"
+#include "platform/platform.h"
 
 class Application {
  public:
