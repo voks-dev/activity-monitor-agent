@@ -7,9 +7,8 @@
 #include "core/metrics.h"
 #include "core/packet_builder.h"
 #include "core/thread_safe_queue.h"
-#include "platform/windows/windows_metrics_collector.h"
-#include "platform/windows/windows_system_info.h"
 #include "transport/http/http_transport.h"
+#include "core/platform.h"
 
 class Application {
  public:
@@ -18,8 +17,8 @@ class Application {
   void run();
 
  private:
-  WindowsSystemInfo systemInfo_;
-  WindowsMetricsCollector collector_;
+  platform::SystemInfo systemInfo_;
+  platform::MetricsCollector collector_;
   ThreadSafeQueue<Metrics> queue_;
   HttpTransport transport_;
   Backup backup_;
