@@ -37,21 +37,35 @@ set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(nlohmann_json cpp_httplib googletest)
 
 add_executable(activity-monitor-agent
-    src/main.cpp
+      src/main.cpp
 
-    src/core/agent.cpp
-    src/core/application.cpp
-    src/core/backup.cpp
-    src/core/packet_builder.cpp
+      src/core/agent.cpp
+      src/core/application.cpp
+      src/core/backup.cpp
+      src/core/packet_builder.cpp
 
-    src/platform/windows/wide_to_utf8.cpp
-    src/platform/windows/windows_metrics_collector.cpp
-    src/platform/windows/windows_stop_signal.cpp
-    src/platform/windows/windows_system_info.cpp
+      src/transport/console/console_transport.cpp
+      src/transport/http/http_transport.cpp
+  )
 
-    src/transport/console/console_transport.cpp
-    src/transport/http/http_transport.cpp
-)
+if(WIN32)
+     target_sources(activity-monitor-agent PRIVATE
+        src/platform/windows/wide_to_utf8.cpp
+        src/platform/windows/windows_metrics_collector.cpp
+        src/platform/windows/windows_stop_signal.cpp
+        src/platform/windows/windows_system_info.cpp
+    )
+    target_link_libraries(activity-monitor-agent PRIVATE
+        kernel32
+        user32
+    )
+elseif(UNIX)
+     target_sources(activity-monitor-agent PRIVATE
+        src/platform/linux/linux_metrics_collector.cpp
+        src/platform/linux/linux_stop_signal.cpp
+        src/platform/linux/linux_system_info.cpp
+    )
+endif()
 
 target_include_directories(activity-monitor-agent PRIVATE src)
 
@@ -59,14 +73,6 @@ target_link_libraries(activity-monitor-agent PRIVATE
     nlohmann_json::nlohmann_json
     httplib::httplib
 )
-
-if(WIN32)
-    target_link_libraries(activity-monitor-agent PRIVATE
-        kernel32
-        user32
-    )
-endif()
-
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 include(ClangFormat)
