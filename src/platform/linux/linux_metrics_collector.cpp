@@ -11,6 +11,7 @@
 #include <format>
 #include <fstream>
 #include <string>
+#include <filesystem>
 
 namespace {
 
@@ -44,12 +45,20 @@ unsigned long getPidProperty(Display* display, Window window) {
 }
 
 std::string getProcessName(unsigned long pid) {
-  if (== 0) {
+  if (pid == 0) {
     return {};
   }
 
-  const std::string path{"/proc/" + std::to_string() + "/comm"};
-  std::ifstream file(path);
+  const std::filesystem::path exePath{"/proc/" + std::to_string(pid) + "/exe"};
+
+  std::error_code ec;
+  const auto target{std::filesystem::read_symlink(exePath, ec)};
+  if (!ec && !target.empty()) {
+    return target.filename().string();
+  }
+
+  const std::string commPath{"/proc/" + std::to_string(pid) + "/comm"};
+  std::ifstream file(commPath);
   if (!file) {
     return {};
   }
