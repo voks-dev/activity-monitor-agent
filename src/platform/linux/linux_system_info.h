@@ -7,7 +7,7 @@
 
 class LinuxSystemInfo : public SystemInfo {
  public:
-  std::string getComputerName() const override { return {}; };
+  std::string getComputerName() const override;
 };
 
 #endif
