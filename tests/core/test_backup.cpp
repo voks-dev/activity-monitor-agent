@@ -26,9 +26,7 @@ class BackupTest : public ::testing::Test {
   }
 };
 
-
 std::atomic<int> BackupTest::counter_{0};
-
 
 TEST_F(BackupTest, SaveBackupReturnsSuccessWhenSaveFile) {
 

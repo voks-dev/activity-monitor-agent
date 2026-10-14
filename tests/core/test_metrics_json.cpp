@@ -14,4 +14,3 @@ TEST(MetricsJson, ToJSONThenFromJSON) {
   EXPECT_EQ(restored.windowTitle, original.windowTitle);
   EXPECT_EQ(restored.userActive, original.userActive);
 }
-
