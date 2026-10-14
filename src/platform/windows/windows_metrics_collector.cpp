@@ -1,6 +1,7 @@
 #include "platform/windows/windows_metrics_collector.h"
 
 #include "platform/windows/wide_to_utf8.h"
+#include "core/metrics.h"
 
 #define WIN32_LEAN_AND_MEAN
 #ifndef NOMINMAX
@@ -21,7 +22,7 @@ std::string getWindowTitle(HWND hWnd) {
     return {};
   }
 
-  // textLength + ноль-терминатор
+  // textLength + null terminator
   const int bufferSize{textLength + 1};
   std::wstring buffer(bufferSize, L'\0');
 
@@ -41,7 +42,7 @@ std::string getProcessName(HWND hWnd) {
     return {};
   }
 
-  // MAX_PATH * 2 запас на случай длинных путей
+  // MAX_PATH * 2 buffer for long paths
   DWORD bufferSize{MAX_PATH * 2};
 
   std::wstring buffer(bufferSize, L'\0');
@@ -51,8 +52,8 @@ std::string getProcessName(HWND hWnd) {
     return {};
   }
 
-  // hProcess закрывается до проверки результата, чтобы освободить его в любом
-  // случае
+  // hProcess is closed before checking the result, to ensure it is released 
+  // regardless of the outcome.
   const BOOL nameRetrieved{
       QueryFullProcessImageNameW(hProcess, 0, buffer.data(), &bufferSize)};
 
