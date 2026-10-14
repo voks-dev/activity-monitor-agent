@@ -2,8 +2,12 @@
 
 #include <gtest/gtest.h>
 
+#include <atomic>
+#include <chrono>
 #include <cstddef>
+#include <future>
 #include <optional>
+#include <thread>
 
 class ThreadSafeQueueTest : public ::testing::Test {
  protected:
@@ -191,4 +195,41 @@ TEST_F(ThreadSafeQueueTest, PushPopImplementFIFOSemantic) {
   queue_.push(4);
 
   EXPECT_EQ(queue_.pop(), 2);
+}
+
+TEST_F(ThreadSafeQueueTest, StopUnblocksWaitingPop) {
+  auto future{std::async(std::launch::async, [this] { return queue_.pop(); })};
+  std::this_thread::sleep_for(std::chrono::milliseconds(50));
+
+  EXPECT_EQ(future.wait_for(std::chrono::milliseconds(0)),
+            std::future_status::timeout);
+
+  queue_.stop();
+
+  ASSERT_EQ(future.wait_for(std::chrono::seconds(1)),
+            std::future_status::ready);
+
+  EXPECT_EQ(future.get(), std::nullopt);
+}
+
+TEST_F(ThreadSafeQueueTest, PushPopCountsMatch) {
+  constexpr int count{5};
+  std::atomic<int> popped{0};
+
+  auto consumer{std::async(std::launch::async, [&] {
+    while (popped < count) {
+      auto value{queue_.pop()};
+      if (value)
+        ++popped;
+      else
+        break;
+    }
+  })};
+
+  for (int i{0}; i < count; ++i) {
+    queue_.push(i);
+  }
+
+  consumer.wait();
+  EXPECT_EQ(popped.load(), count);
 }
