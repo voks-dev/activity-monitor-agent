@@ -25,7 +25,7 @@
 | | Windows | Linux |
 |---|---|---|
 | Платформа | Windows 10 | Ubuntu 24.04 |
-| Сборка |  MSVC 19.3x |  GCC 15.x |
+| Сборка |  MSVC 19.3x |  GCC 13.x |
 | Метрики |  WinAPI |  X11 + XScreenSaver |
 
 
@@ -34,7 +34,7 @@
 
 ## Требования
 
-- **C++20**: протестировано на **MSVC 19.3x** (Windows), **GCC 15.x** (Linux (Ubuntu 24.04)).  
+- **C++20**: протестировано на **MSVC 19.3x** (Windows), **GCC 13.3** (Linux (Ubuntu 24.04)).  
 - **CMake** >= 3.28.
 - **Ninja** - поставляется с Visual Studio или ставится через `apt`.
 - **Python 3** - для демонстрационного сервера.
