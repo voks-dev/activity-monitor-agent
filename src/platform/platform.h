@@ -10,7 +10,7 @@
 namespace platform {
 using MetricsCollector = WindowsMetricsCollector;
 using SystemInfo = WindowsSystemInfo;
-} 
+}  // namespace platform
 
 #elif defined(__linux__)
 #include "platform/linux/linux_metrics_collector.h"
@@ -18,8 +18,8 @@ using SystemInfo = WindowsSystemInfo;
 namespace platform {
 using MetricsCollector = LinuxMetricsCollector;
 using SystemInfo = LinuxSystemInfo;
-}  
+}  // namespace platform
 
 #endif
 
-#endif  
+#endif

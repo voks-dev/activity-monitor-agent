@@ -1,5 +1,3 @@
-#include "core/interface/stop_signal.h"
-
 #include <pthread.h>
 #include <signal.h>
 
@@ -14,7 +12,7 @@ sigset_t makeStopSignalSet() {
   return set;
 }
 
-} 
+}  // namespace
 
 void installStopHandler() {
   const sigset_t set{makeStopSignalSet()};

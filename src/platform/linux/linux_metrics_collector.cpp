@@ -8,10 +8,10 @@
 #include <X11/extensions/scrnsaver.h>
 
 #include <chrono>
+#include <filesystem>
 #include <format>
 #include <fstream>
 #include <string>
-#include <filesystem>
 
 namespace {
 
@@ -168,7 +168,7 @@ std::string getLocalTimeString() {
                      local.tm_hour, local.tm_min, local.tm_sec);
 }
 
-}
+}  // namespace
 
 Metrics LinuxMetricsCollector::collect() const {
   Metrics metrics;
